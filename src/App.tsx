@@ -82,17 +82,11 @@ function App() {
           onConnect={onConnect}
         >
           <Controls />
-
-          <NodeResizer />
           <NodeToolbar />
           <Background gap={12} size={1} />
         </ReactFlow>
       </div>
-      <button
-        onClick={() => {
-          setNodes(initialNodes);
-        }}
-      ></button>
+
     </>
   );
 }
