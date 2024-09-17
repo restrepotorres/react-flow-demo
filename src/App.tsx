@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback } from "react";
 import ReactFlow, {
   Controls,
   Background,
@@ -7,6 +7,8 @@ import ReactFlow, {
   addEdge,
   NodeToolbar,
   NodeResizer,
+  Connection,
+  Edge,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import "./App.css";
@@ -38,9 +40,9 @@ const initialEdges = [{ id: "e1-2", source: "idlogica1", target: "idlogica2" }];
 function App() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-
+  setNodes(initialNodes)
   const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
+    (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
 
@@ -57,7 +59,7 @@ function App() {
 
         <NodeResizer />
         <NodeToolbar />
-        <Background variant="dots" gap={12} size={1} />
+        <Background  gap={12} size={1} />
       </ReactFlow>
     </div>
   );
