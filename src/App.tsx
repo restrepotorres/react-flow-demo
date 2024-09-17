@@ -1,35 +1,66 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useCallback, useEffect } from "react";
+import ReactFlow, {
+  Controls,
+  Background,
+  useNodesState,
+  useEdgesState,
+  addEdge,
+  NodeToolbar,
+  NodeResizer,
+} from "reactflow";
+import "reactflow/dist/style.css";
+import "./App.css";
+import MyNodo from "./MyNodo";
+
+const styles = {
+  width: "80vw",
+  height: "90vh",
+};
+
+const initialNodes = [
+  {
+    id: "idlogica1",
+    position: { x: 0, y: 100 },
+    data: { label: <MyNodo nombre="logica I" creditos={3} /> },
+  },
+  {
+    id: "idlogica2",
+    position: { x: 200, y: 100 },
+    data: {
+      label: <MyNodo nombre="logica II" creditos={3} />,
+    },
+    className: "algoritmia",
+  },
+];
+
+const initialEdges = [{ id: "e1-2", source: "idlogica1", target: "idlogica2" }];
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  const onConnect = useCallback(
+    (params) => setEdges((eds) => addEdge(params, eds)),
+    [setEdges]
+  );
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div style={styles}>
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+      >
+        <Controls />
+
+        <NodeResizer />
+        <NodeToolbar />
+        <Background variant="dots" gap={12} size={1} />
+      </ReactFlow>
+    </div>
+  );
 }
 
-export default App
+export default App;
