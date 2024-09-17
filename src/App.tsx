@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import ReactFlow, {
   Controls,
   Background,
@@ -13,6 +13,7 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 import "./App.css";
 import MyNodo from "./MyNodo";
+import axios from "axios";
 
 const styles = {
   width: "80vw",
@@ -37,7 +38,30 @@ const initialNodes = [
 
 const initialEdges = [{ id: "e1-2", source: "idlogica1", target: "idlogica2" }];
 
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
 function App() {
+  const [data, setData] = useState<User[] | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    axios
+      .get<User[]>("http://localhost:8090/toolbox/api/v1/subject/getall")
+      .then((response) => {
+        setData(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error.message);
+        setLoading(false);
+      });
+  }, []);
+  console.log(data?.map((user) => user.id));
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
@@ -45,7 +69,8 @@ function App() {
     (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
-
+  if (loading) return <p>Cargando...</p>;
+  if (error) return <p>{error}</p>;
   return (
     <>
       <div style={styles}>
