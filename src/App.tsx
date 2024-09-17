@@ -40,28 +40,35 @@ const initialEdges = [{ id: "e1-2", source: "idlogica1", target: "idlogica2" }];
 function App() {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  setNodes(initialNodes)
+
   const onConnect = useCallback(
     (params: Edge | Connection) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
 
   return (
-    <div style={styles}>
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-      >
-        <Controls />
+    <>
+      <div style={styles}>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+        >
+          <Controls />
 
-        <NodeResizer />
-        <NodeToolbar />
-        <Background  gap={12} size={1} />
-      </ReactFlow>
-    </div>
+          <NodeResizer />
+          <NodeToolbar />
+          <Background gap={12} size={1} />
+        </ReactFlow>
+      </div>
+      <button
+        onClick={() => {
+          setNodes(initialNodes);
+        }}
+      ></button>
+    </>
   );
 }
 
